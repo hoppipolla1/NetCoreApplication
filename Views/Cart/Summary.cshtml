@@ -1,0 +1,172 @@
+﻿@model NetCoreApp_Models.ViewModels.ProductUserVM
+
+<form method="post" asp-action="SummaryPost">
+    <br />
+    <div class="backgroundWhiteBorder">
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-dark text-light ml-0 row container">
+                    <div class="col-6">
+                        <i class="fa fa-shopping-cart"></i> &nbsp;
+                        Заказ
+                    </div>
+                    <div class="col-6 text-right">
+                        <a class="btn btn-outline-info btn-sm" asp-action="Index"> Назад </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-7 pb-4">
+                                <div class="row">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-info"> Информация о покупателе: </span>
+                                    </h4>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>ФИО</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.FullName" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Телефон</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.PhoneNumber" required type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Email</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.Email" required type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Адрес доставки</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.Address" type="text" class="form-control" />
+                                        </div>
+                                    </div>  
+                            </div>
+                            <div class="col-12 col-lg-5 row">
+                                <div class="col-12">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-info"> Сумма: </span>
+                                    </h4>
+                                    <ul class="list-group mb-3">
+                                        @{ var orderTotal = 0.0;}
+                                        @for(int i = 0; i < Model.ProductList.Count(); i++)
+                                        {
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Name">
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Id">
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Price">
+                                            <input type="hidden" asp-for="@Model.ProductList[i].TempQt">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="my-0">@Model.ProductList[i].Name</h6>
+                                                    <small class="text-muted">Количество: @Model.ProductList[i].TempQt</small>
+                                                    <small class="text-muted">Цена: @Model.ProductList[i].Price</small>
+                                                </div>
+                                                <span class="text-muted">@(Model.ProductList[i].Price * Model.ProductList[i].TempQt) руб.</span >
+                                            </li>
+                                            orderTotal += Model.ProductList[i].Price * Model.ProductList[i].TempQt;
+                                        }
+                                        <li class="list-group-item d-flex justify-content-between bg-light">
+                                            <small class="text-info"> Итого: </small>
+                                            <strong class="text-info"> @orderTotal руб. </strong>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @if (User.IsInRole(NetCoreApplication_Utility.WebConstants.AdminRole))
+                                {
+                                    <div class="col-12">
+                                        <div class="container">
+                                            <div id="dropin-container"></div>
+                                            <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-5 offset-md-7">
+                            
+                                @*<a class="btn btn-outline-info btn-sm" asp-action="Index">Back to Cart</a>*@
+                                @*<a class="btn btn-primary form-control" asp-action="Summary">Submit Inquiry</a>*@
+                                @*<button class="btn btn-primary form-control" type="submit">Submit Inquiry</button>*@
+                                <input type="submit" class="btn btn-info w-100" value="Оформить заказ" />
+                                @*<input type="submit" asp-action="SubmitOrder" formmethod="post" name="SubmitOrder" value="Submit Order" class="btn btn-info form-control">*@
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://js.braintreegateway.com/web/dropin/1.22.1/js/dropin.min.js"></script>
+    <script>
+        var client_token = "@ViewBag.ClientToken";
+        var form = document.querySelector('#payment-form');
+        braintree.dropin.create({
+            authorization: client_token,
+            container: '#dropin-container'
+        }, function (createErr, instance) {
+            form.addEventListener('submit', function () {
+                event.preventDefault();
+                //Add the nonce to the form and submit
+                instance.requestPaymentMethod(function (err, payload) {
+                    // Submit payload.nonce to your server
+                    document.querySelector('#nonce').value = payload.nonce;
+                    form.submit();
+                });
+            });
+        });
+        function validateInput() {
+            var app_name = document.getElementById("ApplicationUser_FullName").value;
+            var app_phone = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var app_email = document.getElementById("ApplicationUser_Email").value;
+            if (app_name.toString() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    text: 'Пожалуйста, укажите ФИО.'
+                })
+                return false;
+            }
+            if (app_phone.toString() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    text: 'Пожалуйста, заполните номер телефона.'
+                })
+                return false;
+            }
+            if (app_email.toString() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    text: 'Пожалуйста, заполните адрес электронной почты'
+                })
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+}

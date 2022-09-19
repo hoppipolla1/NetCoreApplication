@@ -1,0 +1,17 @@
+﻿<div class="text-center">
+
+    @if (Model != null)
+    {
+        <h1 class="text-info"> Заказ создан </h1>
+        <p>Заказ #@Model.Id был успешно создан! Мы обработаем ваш заказ, скоро наш специалист свяжется с вами для отправки.</p>
+    }
+    else
+    {
+
+        <h1 class="text-info">Inquiry Confirmation</h1>
+
+        <p>Спасибо, мы обработали ваш заказ, скоро наш специалист свяжется с вами для отправки заказа!</p>
+    }
+    @*<img src="/images/patio.jpg" width="80%" />*@
+</div>
+

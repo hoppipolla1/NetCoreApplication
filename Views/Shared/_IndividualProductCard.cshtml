@@ -1,0 +1,27 @@
+﻿@model NetCoreApp_Models.Product
+@using NetCoreApplication_Utility
+
+<div class="col-lg-4 col-md-6 pb-4 filter @Model.Category.Name.Replace(' ','_')">
+    <!-- Card-->
+    <div class="card bg-dark rounded shadow-sm" style="border:1px solid #222">
+        <div class="card-body px-3 pt-3 pb-1 row">
+            <div class="col-7"><label class="float-left" style="color:aliceblue">@Model.Name</label></div>
+            <div class="col-5"><label class="float-right" style="color:aliceblue"><span class="text-info h5">@string.Format("{0:c0}", Model.Price)</span> / шт.</label> </div>
+        </div>
+        <img class="ard-img-top img-fluid d-block mx-auto mb-3 px-5" style="width:100%; height:100%" src="@WebConstants.imagePath@Model.Image" alt="Card image cap">
+        <div class="card-body p-1 px-3 row">
+            <div class="col-6">
+                <span class="badge p-2 border w-100 text-dark" style="background-color:lavenderblush">@Model.Category.Name</span>
+            </div>
+            <div class="col-6 border-0">
+                <span class="badge p-2 border w-100 text-dark" style="background-color:aliceblue">@Model.ApplicationType.Name</span>
+            </div>
+            <div class="col-12 pt-2" style="font-size:13px; text-align:justify; color:aliceblue">
+                <p> @Model.ShortDesc</p>
+            </div>
+            <div class="col-12 p-1">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-light form-control btn-sm p-2" style="height:40px">Подробно</a>
+            </div>
+        </div>
+    </div>
+</div>
