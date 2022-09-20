@@ -1,0 +1,68 @@
+﻿@model IEnumerable<NetCoreApp_Models.Dog>
+@using NetCoreApplication_Utility
+
+<div class="container p-3 bg-white">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary"> Собаки </h2>
+        </div>
+        <div class="col-8 text-right">
+            <a asp-controller="Characteristics" asp-action="Index" class="btn btn-primary">
+                <i class="fa-solid"></i> Список характеристик
+            </a>
+            <a asp-controller="DogCharacteristics" asp-action="Index" class="btn btn-primary">
+                <i class="fa-solid"></i> Характеристики собак
+            </a>
+            <a asp-action="Upsert" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Добавить описание собаки
+            </a>
+        </div>
+    </div>
+
+    <br /><br />
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                        Описание
+                    </th>
+                    <th>
+                        Фото
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td width="10%">@obj.Name</td>
+                        <td><img src="@WebConstants.imagePath@obj.Image" alt="Dog"></td>
+                        <td width="50%">@obj.Description</td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-route-Id="@obj.Id" asp-action="Upsert" class="btn btn-primary mx-1">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-1">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Нет данных.</p>
+    }
+
+</div>
+

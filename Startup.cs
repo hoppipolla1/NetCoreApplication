@@ -55,6 +55,9 @@ namespace NetCoreApplication
             services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<IDogRepository, DogRepository>();
+            services.AddScoped<ICharacteristicsRepository, CharacteristicsRepository>();
+            services.AddScoped<IDogCharacteristicsRepository, DogCharacteristicsRepository>();
 
             services.AddControllersWithViews();
         }

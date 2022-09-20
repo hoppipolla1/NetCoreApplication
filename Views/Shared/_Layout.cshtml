@@ -57,6 +57,7 @@
                                 </div>
                             </li>
                         }
+                        <a class="nav-link" asp-area="" asp-controller="Dog" asp-action="Index"> Всё о собаках </a>
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contacts"> Контакты </a>
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.sessionCart)!=null)

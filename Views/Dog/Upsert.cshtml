@@ -1,0 +1,124 @@
+﻿@model NetCoreApp_Models.ViewModels.DogVM
+@using NetCoreApplication_Utility
+
+@{
+    var title = "Создать описание собаки";
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.Dog.Id != 0)
+    {
+        title = "Редактировать описание собаки";
+        <input asp-for="Dog.Id" hidden />
+    }
+    <div class=" border p-3 bg-white">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="Dog.Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Dog.Name" class="form-control" />
+                        <span asp-validation-for="Dog.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="Dog."></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Dog.Price" class="form-control" />
+                        <span asp-validation-for="Dog.Price" class="text-danger"></span>
+                    </div>
+                </div>*@
+                
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="Dog.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Dog.Description" class="form-control summernote"></textarea>
+                        <span asp-validation-for="Dog.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        Изображение
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                @*<div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="Dog.CategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Dog.CategoryId" asp-items="@Model.CategorySelectList" class="form-select">
+                            <option selected>--Выберите вид номенклатуры--</option>
+                        </select>
+                        <span asp-validation-for="Dog.CategoryId" class="text-danger"></span>
+                    </div>
+                </div>*@
+                
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            @if (Model.Dog.Id != 0)
+                            {
+                //update
+                                <input type="submit" class="btn btn-info w-100" value="Обновить" />
+                            }
+                            else
+                            {
+                //create
+                                <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Создать" />
+                            }
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"> <i class="fa-solid fa-right-from-bracket"></i> Назад </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @*Keep this empty*@
+                @if (Model.Dog.Id != 0)
+                {
+                    <img src="@WebConstants.imagePath@Model.Dog.Image" width="100%" style="border-radius:5px; border:1px solid #bbb">
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+            });
+        });
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please, upload an image!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
+
