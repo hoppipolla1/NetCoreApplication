@@ -33,7 +33,7 @@ namespace Rocky.Controllers
             _dogCharacteristicsRepo = dogCharacteristicsRepo;
         }
 
-        public IActionResult Index(string searchName = null, string searchEmail = null, string searchPhone = null, string Status=null)
+        public IActionResult Index()
         {
             IEnumerable<Dog> objList = _dogRepo.GetAll();
 

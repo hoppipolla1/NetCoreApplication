@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,14 @@ namespace Rocky.Controllers
 
             return View(objList);
         }
-        
+
+        public IActionResult Chart()
+        {
+            IEnumerable<DogCharacteristics> objList = _dogCharacteristicsRepo.GetAll(includeProperties: "Dog,Characteristics");
+
+            return View(objList);
+        }
+
         //GET - Upsert
         public IActionResult Upsert(int? id)
         {

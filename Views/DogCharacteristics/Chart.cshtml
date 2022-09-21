@@ -1,0 +1,71 @@
+﻿@using System.Text
+
+@model IEnumerable<NetCoreApp_Models.DogCharacteristics>
+
+
+<div class="text-center">
+    <h1 class="display-4">MultiLine Chart</h1>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Оценка', 'Аусси', 'Ирландский сеттер'],
+
+    @{
+        int k = 0;
+        List<DogCharacteristics> Dog1Chart = Model.Take(12).ToList();
+        List<DogCharacteristics> Dog2Chart = Model.Skip(12).Take(12).ToList();
+    }
+    @for (int i = 0; i < 12; i++)
+        {
+            string myString = Dog1Chart[i].Characteristics.Name;
+            byte[] bytes = Encoding.Default.GetBytes(myString);
+            myString = Encoding.UTF8.GetString(bytes);
+            <text>['@myString', @Dog1Chart[i].Rating, @Dog2Chart[i].Rating], </text>
+        }
+
+    //foreach (var obj in Dog1Chart)
+    //{
+
+    //    double fahrenheitValue = k++;
+
+    //    <text>['obj.Characteristics.Name', obj.Rating, obj.Rating], </text>
+
+    //}
+
+            ]);
+
+
+        var options = {
+            title: 'Диаграмма сравнения',
+            curveType: 'function',
+            pointsVisible: true,
+            lineWidth: 3,
+            legend: 'right',
+            hAxis: {title: 'Рейтинг'},
+            vAxis: {title: 'bb'},
+            width: '100%',
+            height: '100%',
+            chartArea: {width: '70%', height: '75%'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
+
+        chart.draw(data, options);
+    }
+</script>
+
+
+
+<div class="container-fluid lead">
+
+
+    <div id="line_chart" style="width: 1000px; height: 600px"></div>
+
+
+</div>
